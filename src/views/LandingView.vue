@@ -5,7 +5,7 @@ import Footer from "../components/landing/Footer.vue";
 </script>
 
 <template>
-  <div class="min-h-screen">
+  <div class="min-h-screen bg-surface-0 dark:bg-surface-950">
     <Navbar />
     <HeroSection />
     <Footer />
