@@ -1,35 +1,53 @@
 @import url("https://fonts.googleapis.com/css2?family=Onest:wght@100..900&display=swap");
 
 @import "tailwindcss";
+@import "tailwindcss-primeui";
 
-@theme {
-  --font-sans: "Onest", sans-serif;
-  --color-*: initial;
+body {
+  font-family: "Onest", sans-serif;
+}
 
-  --color-sky-50: oklch(0.977 0.013 236.62);
-  --color-sky-100: oklch(0.951 0.026 236.824);
-  --color-sky-200: oklch(0.901 0.058 230.902);
-  --color-sky-300: oklch(0.828 0.111 230.318);
-  --color-sky-400: oklch(0.746 0.16 232.661);
-  --color-sky-500: oklch(0.685 0.169 237.323);
-  --color-sky-600: oklch(0.588 0.158 241.966);
-  --color-sky-700: oklch(0.5 0.134 242.749);
-  --color-sky-800: oklch(0.443 0.11 240.79);
-  --color-sky-900: oklch(0.391 0.09 240.876);
-  --color-sky-950: oklch(0.293 0.066 243.157);
+:root {
+  --p-primary-50: #f0f9ff;
+  --p-primary-100: #e0f2fe;
+  --p-primary-200: #bae6fd;
+  --p-primary-300: #7dd3fc;
+  --p-primary-400: #38bdf8;
+  --p-primary-500: #39a6d9;
+  --p-primary-600: #0284c7;
+  --p-primary-700: #0369a1;
+  --p-primary-800: #075985;
+  --p-primary-900: #0c4a6e;
+  --p-primary-950: #082f49;
+  --p-surface-0: #ffffff;
+  --p-surface-50: #fafafa;
+  --p-surface-100: #f4f4f5;
+  --p-surface-200: #e4e4e7;
+  --p-surface-300: #d4d4d8;
+  --p-surface-400: #a1a1aa;
+  --p-surface-500: #71717a;
+  --p-surface-600: #52525b;
+  --p-surface-700: #3f3f46;
+  --p-surface-800: #27272a;
+  --p-surface-900: #18181b;
+  --p-surface-950: #09090b;
+  --p-content-border-radius: 6px;
+}
 
-  --color-neutral-50: oklch(0.985 0 0);
-  --color-neutral-100: oklch(0.97 0 0);
-  --color-neutral-200: oklch(0.922 0 0);
-  --color-neutral-300: oklch(0.87 0 0);
-  --color-neutral-400: oklch(0.708 0 0);
-  --color-neutral-500: oklch(0.556 0 0);
-  --color-neutral-600: oklch(0.439 0 0);
-  --color-neutral-700: oklch(0.371 0 0);
-  --color-neutral-800: oklch(0.269 0 0);
-  --color-neutral-900: oklch(0.205 0 0);
-  --color-neutral-950: oklch(0.145 0 0);
-
-  --color-black: #000;
-  --color-white: #fff;
+:root {
+  --p-primary-color: var(--p-primary-500);
+  --p-primary-contrast-color: var(--p-surface-0);
+  --p-primary-hover-color: var(--p-primary-600);
+  --p-primary-active-color: var(--p-primary-700);
+  --p-content-border-color: var(--p-surface-200);
+  --p-content-hover-background: var(--p-surface-100);
+  --p-content-hover-color: var(--p-surface-800);
+  --p-highlight-background: var(--p-primary-50);
+  --p-highlight-color: var(--p-primary-700);
+  --p-highlight-focus-background: var(--p-primary-100);
+  --p-highlight-focus-color: var(--p-primary-800);
+  --p-text-color: var(--p-surface-700);
+  --p-text-hover-color: var(--p-surface-800);
+  --p-text-muted-color: var(--p-surface-500);
+  --p-text-hover-muted-color: var(--p-surface-600);
 }
