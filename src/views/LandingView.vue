@@ -1,3 +1,13 @@
+<script setup>
+import Navbar from "../components/landing/Navbar.vue";
+import HeroSection from "../components/landing/HeroSection.vue";
+import Footer from "../components/landing/Footer.vue";
+</script>
+
 <template>
-    <h1 class="text-2xl font-bold">Landing View</h1>
+  <div class="min-h-screen">
+    <Navbar />
+    <HeroSection />
+    <Footer />
+  </div>
 </template>
