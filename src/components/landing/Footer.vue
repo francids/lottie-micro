@@ -14,7 +14,7 @@ import AppLogo from "../common/AppLogo.vue";
         <div class="space-y-4">
           <AppLogo class="h-6 w-auto" />
           <p class="text-surface-600 dark:text-surface-400 text-sm max-w-md">
-            A simple lottie editor for creating animations efficiently.
+            A simple lottie editor for editing animations efficiently.
           </p>
         </div>
 
