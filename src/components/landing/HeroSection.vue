@@ -9,8 +9,10 @@
         <span class="text-primary">for developers</span>
       </h1>
 
-      <p class="text-lg mb-12 max-w-2xl mx-auto text-surface-600 dark:text-surface-400">
-        Create and edit lottie animations with a simple, lightweight editor.
+      <p
+        class="text-lg mb-12 max-w-2xl mx-auto text-surface-600 dark:text-surface-400"
+      >
+        Edit lottie animations with a simple, lightweight editor.
       </p>
     </div>
   </main>
