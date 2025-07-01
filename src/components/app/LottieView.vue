@@ -6,7 +6,10 @@ import LottieFileInfo from "./LottieFileInfo.vue";
 import LottieControls from "./LottieControls.vue";
 import LottiePreview from "./LottiePreview.vue";
 import LottieEditor from "./LottieEditor.vue";
-import { extractColors, updateColorInLottieData } from "../../utils/lottieUtils";
+import {
+  extractColors,
+  updateColorInLottieData,
+} from "../../utils/lottieUtils";
 
 interface Props {
   lottieData: any;
@@ -94,17 +97,26 @@ const updateColor = (oldColor: string, newColor: string) => {
     newColor,
     animationColors.value
   );
-  
+
   animationColors.value = result.updatedColors;
   previewRef.value?.loadAnimation();
 };
 
-const onUpdateLayerPropertyRequested = (payload: { index: number; propertyKey: string; value: any }) => {
-  if (!props.lottieData || !props.lottieData.layers || !props.lottieData.layers[payload.index]) return;
+const onUpdateLayerPropertyRequested = (payload: {
+  index: number;
+  propertyKey: string;
+  value: any;
+}) => {
+  if (
+    !props.lottieData ||
+    !props.lottieData.layers ||
+    !props.lottieData.layers[payload.index]
+  )
+    return;
 
   const layer = props.lottieData.layers[payload.index];
 
-  if (payload.propertyKey === 'ks.o.k') {
+  if (payload.propertyKey === "ks.o.k") {
     // Ensure path exists for opacity
     if (!layer.ks) {
       layer.ks = {};
@@ -124,11 +136,11 @@ const onUpdateLayerPropertyRequested = (payload: { index: number; propertyKey: s
     } else {
       layer.ks.o.k = payload.value;
     }
-  } else if (payload.propertyKey === 'hd') {
+  } else if (payload.propertyKey === "hd") {
     layer.hd = payload.value;
-  } else if (payload.propertyKey === 'nm') {
+  } else if (payload.propertyKey === "nm") {
     layer.nm = payload.value;
-  } else if (payload.propertyKey === 'bm') {
+  } else if (payload.propertyKey === "bm") {
     layer.bm = payload.value;
   } else {
     // For other direct properties
@@ -139,7 +151,10 @@ const onUpdateLayerPropertyRequested = (payload: { index: number; propertyKey: s
   previewRef.value?.loadAnimation();
 };
 
-const onUpdateLayerOrderRequested = (payload: { oldIndex: number; newIndex: number }) => {
+const onUpdateLayerOrderRequested = (payload: {
+  oldIndex: number;
+  newIndex: number;
+}) => {
   if (!props.lottieData || !props.lottieData.layers) return;
 
   const layers = props.lottieData.layers;
@@ -150,7 +165,6 @@ const onUpdateLayerOrderRequested = (payload: { oldIndex: number; newIndex: numb
   // Force a reload of the animation preview
   previewRef.value?.loadAnimation();
 };
-
 
 const handleFrameUpdate = (frame: number) => {
   currentFrame.value = frame;
@@ -168,13 +182,10 @@ const handleAnimationLoaded = (frames: number) => {
 <template>
   <div class="flex flex-1 p-4 bg-surface-0 dark:bg-surface-950">
     <Splitter class="w-full h-full">
-      <SplitterPanel :size="20" :minSize="15">
+      <SplitterPanel :size="20">
         <div class="p-4 space-y-6 w-full h-full">
-          <LottieFileInfo 
-            :lottie-data="lottieData" 
-            :file-name="fileName" 
-          />
-          
+          <LottieFileInfo :lottie-data="lottieData" :file-name="fileName" />
+
           <LottieControls
             :is-playing="isPlaying"
             :file-name="fileName"
@@ -185,7 +196,7 @@ const handleAnimationLoaded = (frames: number) => {
         </div>
       </SplitterPanel>
 
-      <SplitterPanel :size="55">
+      <SplitterPanel :size="40">
         <LottiePreview
           ref="previewRef"
           :lottie-data="lottieData"
@@ -198,7 +209,7 @@ const handleAnimationLoaded = (frames: number) => {
         />
       </SplitterPanel>
 
-      <SplitterPanel :size="25" :minSize="20">
+      <SplitterPanel :size="40">
         <LottieEditor
           ref="editorRef"
           :lottie-data="lottieData"
@@ -207,8 +218,8 @@ const handleAnimationLoaded = (frames: number) => {
           @update-dimensions="updateDimensions"
           @update-speed="updateSpeed"
           @update-color="updateColor"
-           @update-layer-property-requested="onUpdateLayerPropertyRequested"
-           @update-layer-order-requested="onUpdateLayerOrderRequested"
+          @update-layer-property-requested="onUpdateLayerPropertyRequested"
+          @update-layer-order-requested="onUpdateLayerOrderRequested"
         />
       </SplitterPanel>
     </Splitter>
