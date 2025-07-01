@@ -108,13 +108,13 @@ const onUpdateLayerPropertyRequested = (payload: {
   value: any;
 }) => {
   if (
-    !props.lottieData ||
-    !props.lottieData.layers ||
-    !props.lottieData.layers[payload.index]
+    !localLottieData.value ||
+    !localLottieData.value.layers ||
+    !localLottieData.value.layers[payload.index]
   )
     return;
 
-  const layer = props.lottieData.layers[payload.index];
+  const layer = localLottieData.value.layers[payload.index];
 
   if (payload.propertyKey === "ks.o.k") {
     // Ensure path exists for opacity
