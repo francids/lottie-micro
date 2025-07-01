@@ -265,3 +265,37 @@ export const updateColorInLottieData = (
 
   return { updatedData: lottieData, updatedColors, updatedCount };
 };
+
+// Layer Editing Utilities
+
+export interface BlendMode {
+  value: number;
+  label: string;
+}
+
+export const BLEND_MODES: BlendMode[] = [
+  { value: 0, label: "Normal" },
+  { value: 1, label: "Multiply" },
+  { value: 2, label: "Screen" },
+  { value: 3, label: "Overlay" },
+  { value: 4, label: "Darken" },
+  { value: 5, label: "Lighten" },
+  { value: 6, label: "Color Dodge" },
+  { value: 7, label: "Color Burn" },
+  { value: 8, label: "Hard Light" },
+  { value: 9, label: "Soft Light" },
+  { value: 10, label: "Difference" },
+  { value: 11, label: "Exclusion" },
+  { value: 12, label: "Hue" },
+  { value: 13, label: "Saturation" },
+  { value: 14, label: "Color" },
+  { value: 15, label: "Luminosity" },
+  // Values 16 (Add) and 17 (Hard Mix) might require specific renderer support or have visual quirks.
+  // For simplicity, starting with the common ones.
+];
+
+export const getBlendModeLabel = (value: number | undefined): string => {
+  if (value === undefined) return BLEND_MODES[0].label;
+  const mode = BLEND_MODES.find(m => m.value === value);
+  return mode ? mode.label : String(value); // Fallback to value if not found
+};
