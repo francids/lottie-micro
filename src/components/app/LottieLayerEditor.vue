@@ -15,7 +15,7 @@ import {
 
 interface Layer {
   ind: number; // Index
-  ty: number; // Typess
+  ty: number; // Type of the layer (e.g., shape, text, image, etc.)
   nm?: string; // Name
   hd?: boolean; // Hidden
   ks?: {
