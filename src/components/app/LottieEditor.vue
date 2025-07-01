@@ -3,6 +3,20 @@ import { ref, watch } from "vue";
 import InputNumber from "../../volt/InputNumber.vue";
 import Slider from "../../volt/Slider.vue";
 
+import LottieLayerEditor from './LottieLayerEditor.vue';
+
+interface Layer {
+  ind: number;
+  ty: number;
+  nm?: string;
+  hd?: boolean;
+  ks?: {
+    o?: { k: number | number[] };
+  };
+  bm?: number;
+  [key: string]: any;
+}
+
 interface Props {
   lottieData: any;
   animationColors: string[];
@@ -15,6 +29,8 @@ const emit = defineEmits<{
   updateDimensions: [width: number, height: number];
   updateSpeed: [speed: number];
   updateColor: [oldColor: string, newColor: string];
+  updateLayerPropertyRequested: [payload: { index: number; propertyKey: string; value: any }];
+  updateLayerOrderRequested: [payload: { oldIndex: number; newIndex: number }];
 }>();
 
 const editableWidth = ref(0);
@@ -43,6 +59,14 @@ const handleSpeedUpdate = () => {
 
 const handleColorUpdate = (oldColor: string, newColor: string) => {
   emit("updateColor", oldColor, newColor);
+};
+
+const handleLayerPropertyUpdate = (payload: { index: number; propertyKey: string; value: any }) => {
+  emit("updateLayerPropertyRequested", payload);
+};
+
+const handleLayerOrderUpdate = (payload: { oldIndex: number; newIndex: number }) => {
+  emit("updateLayerOrderRequested", payload);
 };
 
 defineExpose({
@@ -131,6 +155,18 @@ defineExpose({
         <div v-else class="text-xs text-surface-500 dark:text-surface-400 italic">
           No editable colors detected in this animation
         </div>
+      </div>
+
+      <!-- Layer Editor -->
+      <div class="space-y-3" v-if="lottieData && lottieData.layers">
+        <LottieLayerEditor
+          :layers="lottieData.layers"
+          @update-layer-property="handleLayerPropertyUpdate"
+          @update-layer-order="handleLayerOrderUpdate"
+        />
+      </div>
+      <div v-else class="text-xs text-surface-500 dark:text-surface-400 italic">
+        Animation data or layers not available for editing.
       </div>
     </div>
   </div>

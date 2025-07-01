@@ -99,6 +99,59 @@ const updateColor = (oldColor: string, newColor: string) => {
   previewRef.value?.loadAnimation();
 };
 
+const onUpdateLayerPropertyRequested = (payload: { index: number; propertyKey: string; value: any }) => {
+  if (!props.lottieData || !props.lottieData.layers || !props.lottieData.layers[payload.index]) return;
+
+  const layer = props.lottieData.layers[payload.index];
+
+  if (payload.propertyKey === 'ks.o.k') {
+    // Ensure path exists for opacity
+    if (!layer.ks) {
+      layer.ks = {};
+    }
+    if (!layer.ks.o) {
+      layer.ks.o = { k: 100 }; // Default to 100 if oject doesn't exist
+    }
+    // Lottie opacity is 0-100. Slider provides 0-100.
+    // If ks.o.k is an array (animated), update first value for now.
+    // A more robust solution would handle animated properties more gracefully.
+    if (Array.isArray(layer.ks.o.k)) {
+      if (layer.ks.o.k.length > 0) {
+        layer.ks.o.k[0] = payload.value;
+      } else {
+        layer.ks.o.k = [payload.value];
+      }
+    } else {
+      layer.ks.o.k = payload.value;
+    }
+  } else if (payload.propertyKey === 'hd') {
+    layer.hd = payload.value;
+  } else if (payload.propertyKey === 'nm') {
+    layer.nm = payload.value;
+  } else if (payload.propertyKey === 'bm') {
+    layer.bm = payload.value;
+  } else {
+    // For other direct properties
+    layer[payload.propertyKey] = payload.value;
+  }
+  // Trigger reactivity for deep changes if necessary, though direct mutation should be picked up.
+  // Force a reload of the animation preview
+  previewRef.value?.loadAnimation();
+};
+
+const onUpdateLayerOrderRequested = (payload: { oldIndex: number; newIndex: number }) => {
+  if (!props.lottieData || !props.lottieData.layers) return;
+
+  const layers = props.lottieData.layers;
+  const layerToMove = layers.splice(payload.oldIndex, 1)[0];
+  if (layerToMove) {
+    layers.splice(payload.newIndex, 0, layerToMove);
+  }
+  // Force a reload of the animation preview
+  previewRef.value?.loadAnimation();
+};
+
+
 const handleFrameUpdate = (frame: number) => {
   currentFrame.value = frame;
 };
@@ -154,6 +207,8 @@ const handleAnimationLoaded = (frames: number) => {
           @update-dimensions="updateDimensions"
           @update-speed="updateSpeed"
           @update-color="updateColor"
+           @update-layer-property-requested="onUpdateLayerPropertyRequested"
+           @update-layer-order-requested="onUpdateLayerOrderRequested"
         />
       </SplitterPanel>
     </Splitter>
