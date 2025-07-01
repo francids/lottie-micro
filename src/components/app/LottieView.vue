@@ -9,6 +9,7 @@ import LottieEditor from "./LottieEditor.vue";
 import {
   extractColors,
   updateColorInLottieData,
+  updateColorInLayer,
 } from "../../utils/lottieUtils";
 
 interface Props {
@@ -170,6 +171,32 @@ const onUpdateLayerOrderRequested = (payload: {
   }
 };
 
+const onUpdateLayerColorRequested = (payload: {
+  index: number;
+  oldColor: string;
+  newColor: string;
+  path?: string;
+}) => {
+  if (
+    !props.lottieData ||
+    !props.lottieData.layers ||
+    !props.lottieData.layers[payload.index]
+  ) {
+    return;
+  }
+
+  const layer = props.lottieData.layers[payload.index];
+  const result = updateColorInLayer(layer, payload.oldColor, payload.newColor, payload.path);
+
+  if (result.updatedCount > 0) {
+    // Replace the layer with the updated version
+    props.lottieData.layers[payload.index] = result.updatedLayer;
+
+    // Force a reload of the animation preview
+    previewRef.value?.loadAnimation();
+  }
+};
+
 const handleFrameUpdate = (frame: number) => {
   currentFrame.value = frame;
 };
@@ -224,6 +251,7 @@ const handleAnimationLoaded = (frames: number) => {
           @update-color="updateColor"
           @update-layer-property-requested="onUpdateLayerPropertyRequested"
           @update-layer-order-requested="onUpdateLayerOrderRequested"
+          @update-layer-color-requested="onUpdateLayerColorRequested"
         />
       </SplitterPanel>
     </Splitter>

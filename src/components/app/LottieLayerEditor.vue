@@ -4,7 +4,7 @@ import InputText from "../../volt/InputText.vue";
 import Button from "../../volt/Button.vue";
 import Slider from "../../volt/Slider.vue";
 import Panel from "../../volt/Panel.vue";
-import { BLEND_MODES } from "../../utils/lottieUtils";
+import { BLEND_MODES, extractColorsFromLayer } from "../../utils/lottieUtils";
 
 interface Layer {
   ind: number; // Index
@@ -32,6 +32,14 @@ const emit = defineEmits<{
     payload: { index: number; propertyKey: string; value: any }
   ];
   updateLayerOrder: [payload: { oldIndex: number; newIndex: number }];
+  updateLayerColor: [
+    payload: {
+      index: number;
+      oldColor: string;
+      newColor: string;
+      path?: string;
+    }
+  ];
 }>();
 
 // Local mutable copy for editing, if needed, or directly emit changes.
@@ -98,6 +106,42 @@ const availableBlendModes = computed(() => BLEND_MODES);
 // Helper to get current blend mode or default
 const getCurrentBlendModeValue = (layer: Layer): number => {
   return layer.bm === undefined ? 0 : layer.bm;
+};
+
+// Get unique colors for a specific layer with context
+const getLayerColorContexts = (layer: Layer) => {
+  const allColorContexts = extractColorsFromLayer(layer);
+  const uniqueColors = new Map<string, any>();
+
+  // Keep only the first occurrence of each color, preferring more specific types
+  allColorContexts.forEach((context) => {
+    if (!uniqueColors.has(context.color)) {
+      uniqueColors.set(context.color, context);
+    } else {
+      // If we already have this color, keep the one with a more specific type
+      const existing = uniqueColors.get(context.color);
+      if (context.type !== "unknown" && existing.type === "unknown") {
+        uniqueColors.set(context.color, context);
+      }
+    }
+  });
+
+  return Array.from(uniqueColors.values());
+};
+
+// Update color in a specific layer with optional path specificity
+const updateLayerColor = (
+  layerIndex: number,
+  oldColor: string,
+  newColor: string
+) => {
+  emit("updateLayerColor", {
+    index: layerIndex,
+    oldColor,
+    newColor,
+    // Don't pass path to update all instances of this color in the layer
+    path: undefined,
+  });
 };
 </script>
 
@@ -209,6 +253,65 @@ const getCurrentBlendModeValue = (layer: Layer): number => {
                 {{ mode.label }}
               </option>
             </select>
+          </div>
+
+          <!-- Layer Colors -->
+          <div v-if="getLayerColorContexts(layer).length > 0">
+            <label
+              class="block text-xs text-surface-500 dark:text-surface-400 mb-2"
+            >
+              Colors
+            </label>
+            <div class="space-y-2">
+              <div
+                v-for="(colorContext, colorIndex) in getLayerColorContexts(
+                  layer
+                )"
+                :key="`${layer.ind}-${colorIndex}`"
+                class="flex items-center space-x-2"
+              >
+                <div
+                  class="w-6 h-6 rounded border border-surface-300 dark:border-surface-600 flex-shrink-0"
+                  :style="{ backgroundColor: colorContext.color }"
+                ></div>
+                <div class="flex-1 min-w-0">
+                  <span
+                    class="text-xs text-surface-600 dark:text-surface-400 font-mono block"
+                  >
+                    {{ colorContext.color }}
+                  </span>
+                  <span
+                    class="text-xs text-surface-400 dark:text-surface-500 capitalize"
+                    v-if="colorContext.type !== 'unknown'"
+                  >
+                    {{ colorContext.type }}
+                  </span>
+                </div>
+                <input
+                  :value="colorContext.color"
+                  @change="
+                    updateLayerColor(
+                      arrayIndex,
+                      colorContext.color,
+                      ($event.target as HTMLInputElement).value
+                    )
+                  "
+                  type="color"
+                  class="w-8 h-8 border border-surface-300 dark:border-surface-700 rounded cursor-pointer bg-surface-0 dark:bg-surface-950 flex-shrink-0"
+                  :title="`Change ${colorContext.type} color ${colorContext.color}`"
+                />
+              </div>
+            </div>
+          </div>
+          <div v-else>
+            <label
+              class="block text-xs text-surface-500 dark:text-surface-400 mb-1"
+            >
+              Colors
+            </label>
+            <p class="text-xs text-surface-400 dark:text-surface-500 italic">
+              No editable colors found in this layer
+            </p>
           </div>
         </div>
       </Panel>

@@ -20,6 +20,9 @@ const emit = defineEmits<{
     payload: { index: number; propertyKey: string; value: any }
   ];
   updateLayerOrderRequested: [payload: { oldIndex: number; newIndex: number }];
+  updateLayerColorRequested: [
+    payload: { index: number; oldColor: string; newColor: string; path?: string }
+  ];
 }>();
 
 const editableWidth = ref(0);
@@ -59,6 +62,15 @@ const handleLayerOrderUpdate = (payload: {
   newIndex: number;
 }) => {
   emit("updateLayerOrderRequested", payload);
+};
+
+const handleLayerColorUpdate = (payload: {
+  index: number;
+  oldColor: string;
+  newColor: string;
+  path?: string;
+}) => {
+  emit("updateLayerColorRequested", payload);
 };
 
 defineExpose({
@@ -169,6 +181,7 @@ defineExpose({
           :layers="lottieData.layers"
           @update-layer-property="handleLayerPropertyUpdate"
           @update-layer-order="handleLayerOrderUpdate"
+          @update-layer-color="handleLayerColorUpdate"
         />
       </div>
       <div v-else class="text-xs text-surface-500 dark:text-surface-400 italic">
