@@ -1,4 +1,8 @@
-# Lottie Micro - A Minimal Lottie Editor
+<img src="./public/icon.svg" width="100">
+
+# Lottie Micro
+
+A Minimal Lottie Editor
 
 ![Lottie Micro - App Screenshot](./assets/demo-app.webp)
 
