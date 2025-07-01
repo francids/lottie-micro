@@ -1,17 +1,10 @@
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { computed } from "vue";
 import InputText from "../../volt/InputText.vue";
 import Button from "../../volt/Button.vue";
 import Slider from "../../volt/Slider.vue";
 import Panel from "../../volt/Panel.vue";
-// Assuming a simple Checkbox or Toggle component might be needed.
-// For now, using a standard HTML checkbox.
-// import Checkbox from '../../volt/Checkbox.vue'; // If available
-import {
-  BLEND_MODES,
-  getBlendModeLabel,
-  type BlendMode,
-} from "../../utils/lottieUtils";
+import { BLEND_MODES } from "../../utils/lottieUtils";
 
 interface Layer {
   ind: number; // Index
@@ -66,19 +59,7 @@ const updateName = (layerIndex: number, newName: string) => {
   });
 };
 
-const updateVisibility = (layerIndex: number, isHidden: boolean) => {
-  emit("updateLayerProperty", {
-    index: layerIndex,
-    propertyKey: "hd",
-    value: isHidden,
-  });
-};
-
 const updateOpacity = (layerIndex: number, newOpacity: number) => {
-  // Path to opacity is ks.o.k
-  // Emitting a deep update might require special handling in the parent,
-  // or the parent needs to know the full path.
-  // For now, let's emit with a dot-separated path or a specific structure.
   emit("updateLayerProperty", {
     index: layerIndex,
     propertyKey: "ks.o.k",
@@ -180,27 +161,6 @@ const getCurrentBlendModeValue = (layer: Layer): number => {
             />
           </div>
 
-          <!-- Visibility -->
-          <div class="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              :id="`layer-visible-${layer.ind}`"
-              :checked="!layer.hd"
-              @change="
-                updateVisibility(
-                  arrayIndex,
-                  !($event.target as HTMLInputElement).checked
-                )
-              "
-              class="w-4 h-4 text-primary-600 bg-surface-100 border-surface-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-surface-800 focus:ring-2 dark:bg-surface-700 dark:border-surface-600"
-            />
-            <label
-              :for="`layer-visible-${layer.ind}`"
-              class="text-xs text-surface-500 dark:text-surface-400"
-              >Visible</label
-            >
-          </div>
-
           <!-- Opacity -->
           <div>
             <label
@@ -212,7 +172,9 @@ const getCurrentBlendModeValue = (layer: Layer): number => {
             <Slider
               :id="`layer-opacity-${layer.ind}`"
               :modelValue="getLayerOpacity(layer)"
-              @update:modelValue="updateOpacity(arrayIndex, $event)"
+              @update:modelValue="(value: number) => {
+                updateOpacity(arrayIndex, value);
+              }"
               :min="0"
               :max="100"
               :step="1"
@@ -231,12 +193,12 @@ const getCurrentBlendModeValue = (layer: Layer): number => {
             <select
               :id="`layer-blendmode-${layer.ind}`"
               :value="getCurrentBlendModeValue(layer)"
-              @change="
+              @input="(event: any) => {
                 updateBlendMode(
                   arrayIndex,
-                  parseInt(($event.target as HTMLSelectElement).value)
-                )
-              "
+                  parseInt(event.target.value)
+                );
+              }"
               class="w-full p-2 text-sm border border-surface-300 dark:border-surface-700 rounded-md cursor-pointer bg-surface-0 dark:bg-surface-900 text-surface-700 dark:text-surface-200 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             >
               <option

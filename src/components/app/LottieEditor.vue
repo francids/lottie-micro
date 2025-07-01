@@ -2,20 +2,7 @@
 import { ref, watch } from "vue";
 import InputNumber from "../../volt/InputNumber.vue";
 import Slider from "../../volt/Slider.vue";
-
 import LottieLayerEditor from "./LottieLayerEditor.vue";
-
-interface Layer {
-  ind: number;
-  ty: number;
-  nm?: string;
-  hd?: boolean;
-  ks?: {
-    o?: { k: number | number[] };
-  };
-  bm?: number;
-  [key: string]: any;
-}
 
 interface Props {
   lottieData: any;
@@ -57,10 +44,6 @@ const handleDimensionUpdate = () => {
 
 const handleSpeedUpdate = () => {
   emit("updateSpeed", editableSpeed.value);
-};
-
-const handleColorUpdate = (oldColor: string, newColor: string) => {
-  emit("updateColor", oldColor, newColor);
 };
 
 const handleLayerPropertyUpdate = (payload: {

@@ -108,13 +108,14 @@ const onUpdateLayerPropertyRequested = (payload: {
   value: any;
 }) => {
   if (
-    !localLottieData.value ||
-    !localLottieData.value.layers ||
-    !localLottieData.value.layers[payload.index]
-  )
+    !props.lottieData ||
+    !props.lottieData.layers ||
+    !props.lottieData.layers[payload.index]
+  ) {
     return;
+  }
 
-  const layer = localLottieData.value.layers[payload.index];
+  const layer = props.lottieData.layers[payload.index];
 
   if (payload.propertyKey === "ks.o.k") {
     // Ensure path exists for opacity
@@ -122,7 +123,7 @@ const onUpdateLayerPropertyRequested = (payload: {
       layer.ks = {};
     }
     if (!layer.ks.o) {
-      layer.ks.o = { k: 100 }; // Default to 100 if oject doesn't exist
+      layer.ks.o = { k: 100 }; // Default to 100 if object doesn't exist
     }
     // Lottie opacity is 0-100. Slider provides 0-100.
     // If ks.o.k is an array (animated), update first value for now.
@@ -146,7 +147,7 @@ const onUpdateLayerPropertyRequested = (payload: {
     // For other direct properties
     layer[payload.propertyKey] = payload.value;
   }
-  // Trigger reactivity for deep changes if necessary, though direct mutation should be picked up.
+
   // Force a reload of the animation preview
   previewRef.value?.loadAnimation();
 };
@@ -155,15 +156,18 @@ const onUpdateLayerOrderRequested = (payload: {
   oldIndex: number;
   newIndex: number;
 }) => {
-  if (!props.lottieData || !props.lottieData.layers) return;
+  if (!props.lottieData || !props.lottieData.layers) {
+    return;
+  }
 
   const layers = props.lottieData.layers;
   const layerToMove = layers.splice(payload.oldIndex, 1)[0];
   if (layerToMove) {
     layers.splice(payload.newIndex, 0, layerToMove);
+
+    // Force a reload of the animation preview
+    previewRef.value?.loadAnimation();
   }
-  // Force a reload of the animation preview
-  previewRef.value?.loadAnimation();
 };
 
 const handleFrameUpdate = (frame: number) => {
